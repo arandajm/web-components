@@ -7,6 +7,8 @@ class Tooltip extends HTMLElement {
     this.tooltipText = "Some dummy text!!";
     //Enable shadow DOM
     this.attachShadow({ mode: "open" });
+    this.shadowRoot.innerHTML = `<slot>Default Text</slot>
+                <span> (?)</span>`;
   }
 
   //Access to the DOM when this element has been mounted and modify it!
@@ -14,8 +16,8 @@ class Tooltip extends HTMLElement {
     if (this.hasAttribute("text")) {
       this.tooltipText = this.getAttribute("text");
     }
-    const tooltipIcon = document.createElement("span");
-    tooltipIcon.textContent = " (?)";
+    // Get the span element in the DOM
+    const tooltipIcon = this.shadowRoot.querySelector("span");
     //Add listener when mouse is enter
     tooltipIcon.addEventListener("mouseenter", this._showTooltip.bind(this));
     tooltipIcon.addEventListener("mouseleave", this._hideTooltip.bind(this));
