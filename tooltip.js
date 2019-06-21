@@ -32,7 +32,7 @@ class Tooltip extends HTMLElement {
                     border-radius: 50%;
                   }
                   
-                  :host {
+                  :host(.important) {
                     background: #ccc;
                   }
                 </style> 
