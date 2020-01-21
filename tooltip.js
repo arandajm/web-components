@@ -2,12 +2,11 @@ class Tooltip extends HTMLElement {
   // this default method is called when the class is instanced
   constructor() {
     super();
-    // This will be used to save the tooltip container and it will be accessed into the class
-    this._tooltipContainer;
     // This will be used to save the tooltip icon and it will be accessed into the class
     this._tooltipIcon;
     // This property is associated with the text attribute, that for default has "Some dummy text!!" like its value
     this._tooltipText = "Some dummy text!!";
+    this._tooltipVisible = false;
     //Enable shadow DOM
     this.attachShadow({ mode: "open" });
     // You can style your web component with ::slotted, :host o :host-context
@@ -73,6 +72,7 @@ class Tooltip extends HTMLElement {
       this._hideTooltip.bind(this)
     );
     this.style.position = "relative";
+    this._render();
   }
 
   // Observe when some attribute changes.
@@ -96,16 +96,29 @@ class Tooltip extends HTMLElement {
     this._tooltipIcon.removeEventListener("mouseenter", this._showTooltip);
     this._tooltipIcon.removeEventListener("mouseleave", this._hideTooltip);
   }
+  // Is responsable to access to the DOM and update it!
+  _render() {
+    let tooltipContainer = this.shadowRoot.querySelector("div");
+    if (this._tooltipVisible) {
+      tooltipContainer = document.createElement("div");
+      tooltipContainer.textContent = this._tooltipText;
+      this.shadowRoot.appendChild(tooltipContainer);
+    } else {
+      if (tooltipContainer) {
+        this.shadowRoot.removeChild(tooltipContainer);
+      }
+    }
+  }
 
   // This method should be used into the class ("_ convension")
   _showTooltip() {
-    this._tooltipContainer = document.createElement("div");
-    this._tooltipContainer.textContent = this._tooltipText;
-    this.shadowRoot.appendChild(this._tooltipContainer);
+    this._tooltipVisible = true;
+    this._render();
   }
 
   _hideTooltip() {
-    this.shadowRoot.removeChild(this._tooltipContainer);
+    this._tooltipVisible = false;
+    this._render();
   }
 }
 
