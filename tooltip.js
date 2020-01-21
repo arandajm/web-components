@@ -4,6 +4,8 @@ class Tooltip extends HTMLElement {
     super();
     // This will be used to save the tooltip container and it will be accessed into the class
     this._tooltipContainer;
+    // This will be used to save the tooltip icon and it will be accessed into the class
+    this._tooltipIcon;
     // This property is associated with the text attribute, that for default has "Some dummy text!!" like its value
     this._tooltipText = "Some dummy text!!";
     //Enable shadow DOM
@@ -60,11 +62,16 @@ class Tooltip extends HTMLElement {
       this._tooltipText = this.getAttribute("text");
     }
     // Get the span element in the DOM
-    const tooltipIcon = this.shadowRoot.querySelector("span");
+    this._tooltipIcon = this.shadowRoot.querySelector("span");
     //Add listener when mouse is enter
-    tooltipIcon.addEventListener("mouseenter", this._showTooltip.bind(this));
-    tooltipIcon.addEventListener("mouseleave", this._hideTooltip.bind(this));
-    this.shadowRoot.appendChild(tooltipIcon);
+    this._tooltipIcon.addEventListener(
+      "mouseenter",
+      this._showTooltip.bind(this)
+    );
+    this._tooltipIcon.addEventListener(
+      "mouseleave",
+      this._hideTooltip.bind(this)
+    );
     this.style.position = "relative";
   }
 
@@ -82,6 +89,12 @@ class Tooltip extends HTMLElement {
   static get observedAttributes() {
     // You have to specify the name of the attribute that you want to observe for any change.
     return ["text"];
+  }
+  // This Circle life method is called when the element is disconnected from the DOM. This is the best place to clean up for example, the event listeners
+  disconnectedCallback() {
+    console.log("Removing event listeners....");
+    this._tooltipIcon.removeEventListener("mouseenter", this._showTooltip);
+    this._tooltipIcon.removeEventListener("mouseleave", this._hideTooltip);
   }
 
   // This method should be used into the class ("_ convension")
