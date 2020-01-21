@@ -1,12 +1,14 @@
 class Tooltip extends HTMLElement {
+  // this default method is called when the class is instanced
   constructor() {
     super();
     // This will be used to save the tooltip container and it will be accessed into the class
-    this.tooltipContainer;
+    this._tooltipContainer;
     // This property is associated with the text attribute, that for default has "Some dummy text!!" like its value
-    this.tooltipText = "Some dummy text!!";
+    this._tooltipText = "Some dummy text!!";
     //Enable shadow DOM
     this.attachShadow({ mode: "open" });
+    // You can style your web component with ::slotted, :host o :host-context
     this.shadowRoot.innerHTML = `
                 <style>
                   div {
@@ -55,7 +57,7 @@ class Tooltip extends HTMLElement {
   //Access to the DOM when this element has been mounted and modify it!
   connectedCallback() {
     if (this.hasAttribute("text")) {
-      this.tooltipText = this.getAttribute("text");
+      this._tooltipText = this.getAttribute("text");
     }
     // Get the span element in the DOM
     const tooltipIcon = this.shadowRoot.querySelector("span");
@@ -68,13 +70,13 @@ class Tooltip extends HTMLElement {
 
   // This method should be used into the class ("_ convension")
   _showTooltip() {
-    this.tooltipContainer = document.createElement("div");
-    this.tooltipContainer.textContent = this.tooltipText;
-    this.shadowRoot.appendChild(this.tooltipContainer);
+    this._tooltipContainer = document.createElement("div");
+    this._tooltipContainer.textContent = this._tooltipText;
+    this.shadowRoot.appendChild(this._tooltipContainer);
   }
 
   _hideTooltip() {
-    this.shadowRoot.removeChild(this.tooltipContainer);
+    this.shadowRoot.removeChild(this._tooltipContainer);
   }
 }
 
