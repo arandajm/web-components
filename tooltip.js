@@ -68,6 +68,16 @@ class Tooltip extends HTMLElement {
     this.style.position = "relative";
   }
 
+  // Observe when some attribute changes.
+  attributeChangedCallback(name, oldValue, newValue) {
+    console.log(name, oldValue, newValue);
+  }
+
+  static get observedAttributes() {
+    // You have to specify the name of the attribute that you want to observe for any change.
+    return ["text"];
+  }
+
   // This method should be used into the class ("_ convension")
   _showTooltip() {
     this._tooltipContainer = document.createElement("div");
